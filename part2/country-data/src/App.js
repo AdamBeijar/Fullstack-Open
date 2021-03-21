@@ -26,7 +26,7 @@ function App() {
                         <ul>
                             {country.languages.map(language => <li>{language.name}</li>)}
                         </ul>
-                        <img src={country.flag} width="150" border="1px black solid"/>
+                        <img alt={"$flag of {country.name}"} src={country.flag} width="150" border="1px black solid"/>
                     </div>)
             }else{
                 return countries.filter(country => country.name.includes(show)).map(country => <p>{country.name}</p>)
