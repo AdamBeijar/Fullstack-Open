@@ -3,11 +3,20 @@ import phonebookService from "./Services/phonebookService";
 import Filter from "./Components/Filter"
 import PersonForm from "./Components/PersonForm";
 import Persons from "./Components/Persons";
+
 const App = () => {
     const [ persons, setPersons ] = useState([])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ show, setShow ] = useState('')
+    const [ message, setMessage ] = useState('')
+    const [ errorMessage, setErrorMessage ] = useState('')
+    const messageStyle = {
+        backgroundColor: "lightgray",
+        border: "1px black solid",
+        color: "green",
+        fontsize:22
+    }
     useEffect(()=>{
         phonebookService
             .getAll()
@@ -20,7 +29,19 @@ const App = () => {
             phonebookService
                 .updatePhoneNumber(person.id, newNumber)
                 .then(response => setPersons(persons.map(note => note.id !== person.id ? note : response.data)))
+                .then(message =>{
+                    setMessage(`Updated ${person.name}'s phone number to ${newNumber}`)
+                    setTimeout(()=>{
+                        setMessage('')
+                    }, 2000)
+                })
         }
+    }
+    const updateErrorMessage = (person) => {
+        setErrorMessage(`Error, information of ${person.name} has already been removed from server`)
+        setTimeout(()=>{
+            setErrorMessage('')
+        }, 2000)
     }
     const addPerson = (event) => {
         event.preventDefault()
@@ -34,8 +55,12 @@ const App = () => {
             setNewNumber('')
             phonebookService
                 .create(personObject)
-                .then(response=>{
-                    console.log(response)
+                .then(response=>{console.log(response)})
+                .then(message =>{
+                    setMessage(`Added ${personObject.name}`)
+                    setTimeout(()=>{
+                        setMessage('')
+                    }, 2000)
                 })
         } else {
             const person = persons.find(p => p.name === newName)
@@ -53,14 +78,16 @@ const App = () => {
     }
     const namesToShow = persons.filter(person => person.name.includes(show))
 
+
     return (
         <div>
             <h2>Phonebook</h2>
+            <p style={messageStyle}>{message}</p>
             <Filter handleFilterChange={handleFilterChange}/>
             <h2>add a new</h2>
             <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
             <h2>Numbers</h2>
-            <Persons key = {namesToShow} namesToShow={namesToShow}/>
+            <Persons key = {namesToShow} namesToShow={namesToShow} updateErrorMessage={updateErrorMessage}/>
         </div>
     )
 }
