@@ -4,7 +4,7 @@ const Persons = (props) => {
     return(
         <div>
             {props.namesToShow.map(person =>
-                    <div><p>{person.name} {person.number}</p></div>
+                    <div><p >{person.name} {person.number}</p></div>
                 )}
         </div>
     )
