@@ -1,6 +1,5 @@
 import React from "react"
 import phonebookService from "../Services/phonebookService";
-import App from "../App";
 const Persons = (props) => {
     const deleteUser = (person) =>{
         if(window.confirm(`Do you really want to Delete ${person.name}?`)){
